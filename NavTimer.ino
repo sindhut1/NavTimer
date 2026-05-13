@@ -359,6 +359,10 @@ void loop() {
       }
       //BUTTON TO SPEED CHECK
       else if (touch_x > 20 && touch_x < 220 && touch_y > 360 && touch_y < 440) {
+        if (distance_at_last_speed_check == 0 && distance_at_last_speed_check_decimal == 0) {
+          distance_at_last_speed_check = current_leg->leg_distance;
+          distance_at_last_speed_check_decimal = current_leg->leg_distance_decimal;
+        }
         add_new_leg_distance = false;
         screen = "add_distance";
         time_at_speed_check = Get_Current_Sum_Time();
@@ -745,6 +749,8 @@ void Timer_Screen() {
 
   display.setTextColor(0xffff);
   display.setTextSize(2);
+  display.setCursor(40, 260);
+  display.print("GSR / GSP");
   for (int i = 0; i < 4; i++) {
     if (speed[i] > 0) {
       display.setCursor(20, 280+(20*i));
@@ -1056,8 +1062,8 @@ void Ground_Speed_Push_Back() {
     // ((current_leg->leg_distance + (current_leg->leg_distance_decimal / 10.0)) - (distance + (distance_decimal / 10.0))) / (((Get_Current_Total_Time() - time_at_speed_check)/60.0)/60.0);
     //((current_leg->leg_distance + (current_leg->leg_distance_decimal/10.0)) - (distance + (distance_decimal / 10.0))) / (((current_leg->leg_time - current_leg->leg_time_left)/60.0)/60.0);
   }
-  distance_at_last_speed_check = current_leg->leg_distance;
-  distance_at_last_speed_check_decimal = current_leg->leg_distance_decimal;
+  distance_at_last_speed_check = distance;
+  distance_at_last_speed_check_decimal = distance_decimal;
   time_at_last_speed_check = time_at_speed_check;
   speed_index++;
 }
